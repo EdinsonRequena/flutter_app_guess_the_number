@@ -25,7 +25,7 @@ class _GuessInputState extends State<GuessInput> {
         Flexible(
           child: TextField(
             controller: _controller,
-            enabled: playing, // deshabilita si ganó/perdió
+            enabled: playing,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               labelText: 'Enter a number',
@@ -39,7 +39,6 @@ class _GuessInputState extends State<GuessInput> {
               ? () {
                   final text = _controller.text.trim();
 
-                  // --- Validaciones ---
                   if (text.isEmpty) {
                     _showSnack(context, 'Please enter a number');
                     return;
@@ -58,7 +57,6 @@ class _GuessInputState extends State<GuessInput> {
                     return;
                   }
 
-                  // --- Lógica de juego ---
                   final result = engine.guess(value);
                   _controller.clear();
 
