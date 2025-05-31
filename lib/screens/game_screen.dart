@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/level_selector.dart';
 import '../widgets/guess_input.dart';
+import '../widgets/attempt_info.dart';
 import '../widgets/history_columns.dart';
 
 class GameScreen extends StatelessWidget {
@@ -17,6 +18,8 @@ class GameScreen extends StatelessWidget {
             LevelSelector(),
             SizedBox(height: 12),
             GuessInput(),
+            SizedBox(height: 8),
+            AttemptInfo(),
             SizedBox(height: 12),
             Expanded(child: HistoryColumns()),
           ],

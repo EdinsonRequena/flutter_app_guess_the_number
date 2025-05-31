@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../core/game_engine.dart';
 import '../core/models/game_status.dart';
+import '../core/models/difficulty.dart';
 
 class GuessInput extends StatefulWidget {
   const GuessInput({super.key});
@@ -24,6 +25,7 @@ class _GuessInputState extends State<GuessInput> {
         Flexible(
           child: TextField(
             controller: _controller,
+            enabled: playing,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               labelText: 'Enter a number',
@@ -35,16 +37,54 @@ class _GuessInputState extends State<GuessInput> {
         ElevatedButton(
           onPressed: playing
               ? () {
-                  final value = int.tryParse(_controller.text);
-                  if (value == null) return;
-                  engine.guess(value);
+                  final text = _controller.text.trim();
+
+                  if (text.isEmpty) {
+                    _showSnack(context, 'Please enter a number');
+                    return;
+                  }
+
+                  final value = int.tryParse(text);
+                  if (value == null) {
+                    _showSnack(context, 'Only integers are allowed');
+                    return;
+                  }
+
+                  final min = engine.difficulty.min;
+                  final max = engine.difficulty.max;
+                  if (value < min || value > max) {
+                    _showSnack(context, 'Number must be between $min and $max');
+                    return;
+                  }
+
+                  final result = engine.guess(value);
                   _controller.clear();
+
+                  if (result == GameStatus.won) {
+                    _showSnack(
+                      context,
+                      '🎉 You won! The number was ${engine.secret}',
+                      color: Colors.green,
+                    );
+                  } else if (result == GameStatus.lost) {
+                    _showSnack(
+                      context,
+                      '😢 You lost! The number was ${engine.secret}',
+                      color: Colors.red,
+                    );
+                  }
                 }
               : null,
           child: const Text('Guess'),
         ),
       ],
     );
+  }
+
+  void _showSnack(BuildContext context, String msg, {Color? color}) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(msg), backgroundColor: color));
   }
 
   @override
