@@ -10,14 +10,15 @@ class HistoryColumns extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final engine = context.watch<GameEngine>();
-    final greater = engine.greaterGuesses;
-    final less = engine.lessGuesses;
-
     return Row(
       children: [
-        _HistoryList(title: 'Greater than (>)', numbers: greater),
+        _HistoryList(
+          title: 'Greater than (>)',
+          numbers: engine.greaterGuesses,
+          status: engine.status,
+        ),
         const VerticalDivider(width: 1),
-        _HistoryList(title: 'Less than (<)', numbers: less),
+        _HistoryList(title: 'Less than (<)', numbers: engine.lessGuesses, status: engine.status),
       ],
     );
   }
@@ -26,11 +27,14 @@ class HistoryColumns extends StatelessWidget {
 class _HistoryList extends StatelessWidget {
   final String title;
   final List<int> numbers;
+  final GameStatus status;
 
-  const _HistoryList({required this.title, required this.numbers});
+  const _HistoryList({required this.title, required this.numbers, required this.status});
 
   @override
   Widget build(BuildContext context) {
+    final highlightColor = status == GameStatus.won ? Colors.green : Colors.red;
+
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,8 +43,16 @@ class _HistoryList extends StatelessWidget {
           const SizedBox(height: 8),
           Expanded(
             child: ListView.builder(
+              reverse: true,
               itemCount: numbers.length,
-              itemBuilder: (_, i) => ListTile(dense: true, title: Text(numbers[i].toString())),
+              itemBuilder: (_, i) => ListTile(
+                dense: true,
+                visualDensity: VisualDensity.compact,
+                title: Text(
+                  numbers[i].toString(),
+                  style: TextStyle(color: status == GameStatus.playing ? null : highlightColor),
+                ),
+              ),
             ),
           ),
         ],
