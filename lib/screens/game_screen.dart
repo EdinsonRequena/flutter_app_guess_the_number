@@ -3,6 +3,7 @@ import '../widgets/level_selector.dart';
 import '../widgets/guess_input.dart';
 import '../widgets/attempt_info.dart';
 import '../widgets/history_columns.dart';
+import '../widgets/secret_number_display.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -22,6 +23,8 @@ class GameScreen extends StatelessWidget {
             AttemptInfo(),
             SizedBox(height: 12),
             Expanded(child: HistoryColumns()),
+            SizedBox(height: 12),
+            SecretNumberDisplay(),
           ],
         ),
       ),
